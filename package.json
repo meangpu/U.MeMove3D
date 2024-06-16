@@ -1,20 +1,11 @@
 {
-  "name": "com.meangpu.tools",
+  "name": "com.meangpu.move.3d",
   "version": "0.0.1",
   "unity": "2021.3",
-  "displayName": "MeTools",
-  "description": "the helpful des \n very use ful",
+  "displayName": "MeMove3D",
+  "description": "For movement script in 3D",
   "author": {
     "name": "meangpu",
     "url": "https://github.com/meangpu"
-  },
-  "dependencies": {
-    "com.unity.textmeshpro": "3.0.6"
-  },
-  "samples": [
-    {
-      "displayName": "ColorSet",
-      "path": "Samples~/ColorSet"
-    }
-  ]
+  }
 }
