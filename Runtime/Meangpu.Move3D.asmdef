@@ -1,7 +1,10 @@
 {
     "name": "Meangpu.Move3D",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:3d59d1e925635174b99d0aae53af3aac"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
