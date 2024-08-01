@@ -43,6 +43,20 @@ namespace Meangpu.Move3D.FPS
             _rb = GetComponent<Rigidbody>();
             _rb.freezeRotation = true;
             _readyToJump = true;
+            LockCursor();
+        }
+
+
+        public void LockCursor()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        public void UnLockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         private void Update()
