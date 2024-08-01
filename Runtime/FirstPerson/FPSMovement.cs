@@ -4,7 +4,18 @@ namespace Meangpu.Move3D.FPS
 {
     public class FPSMovement : MonoBehaviour
     {
-        // learn from https://www.youtube.com/watch?v=f473C43s8nE
+        /// <summary>
+        /// learn from https://www.youtube.com/watch?v=f473C43s8nE
+        ///
+        /// stick this script to main parent player transform
+        /// </summary>
+
+        [Header("Mouse Input")]
+        [SerializeField] float _mouseSensitivity = 200f;
+        [SerializeField] Vector2 _rotationClamp = new(-60, 60);
+        private float _rotationX = 0f;
+        private float _rotationY = 0f;
+
         [Header("Movement")]
         [SerializeField] float _moveSpeed = 10;
         [SerializeField] float _groundDrag = 5;
@@ -18,11 +29,9 @@ namespace Meangpu.Move3D.FPS
         [SerializeField] KeyCode _jumpKey = KeyCode.Space;
 
         [Header("Ground Check")]
-        [SerializeField] float _playerHeight;
+        [SerializeField] float _playerHeight = 10;
         [SerializeField] LayerMask _whatIsGround;
         bool _grounded;
-
-        [SerializeField] Transform _orientation;
 
         float _horizontalInput;
         float _verticalInput;
@@ -42,11 +51,20 @@ namespace Meangpu.Move3D.FPS
 
             GetInput();
             ControlSpeed();
+            RotateCamera();
 
             if (_grounded)
                 _rb.linearDamping = _groundDrag;
             else
                 _rb.linearDamping = 0;
+        }
+
+        private void RotateCamera()
+        {
+            _rotationX += Input.GetAxis("Mouse X") * _mouseSensitivity * Time.deltaTime;
+            _rotationY += Input.GetAxis("Mouse Y") * _mouseSensitivity * Time.deltaTime;
+            _rotationY = Mathf.Clamp(_rotationY, _rotationClamp.x, _rotationClamp.y);
+            transform.rotation = Quaternion.Euler(_rotationY, _rotationX, 0f);
         }
 
         private void FixedUpdate()
@@ -69,20 +87,16 @@ namespace Meangpu.Move3D.FPS
 
         private void MovePlayer()
         {
-            _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
-
+            _moveDirection = transform.forward * _verticalInput + transform.right * _horizontalInput;
             if (_grounded)
                 _rb.AddForce(_moveDirection.normalized * _moveSpeed * 10f, ForceMode.Force);
-
             else if (!_grounded)
                 _rb.AddForce(_moveDirection.normalized * _moveSpeed * 10f * _airMultiplier, ForceMode.Force);
         }
 
         private void ControlSpeed()
         {
-            Vector3 flatVel = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
-
-            // limit velocity
+            Vector3 flatVel = new(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
             if (flatVel.magnitude > _moveSpeed)
             {
                 Vector3 limitedVel = flatVel.normalized * _moveSpeed;
