@@ -4,13 +4,14 @@ namespace Meangpu.Move3D.FPS
 {
     public class FPSMovement : MonoBehaviour
     {
-        public float moveSpeed = 5f;
-        public float mouseSensitivity = 2f;
-        public float jumpForce = 5f;
-        public float gravity = -9.81f;
+        [SerializeField] Vector3Reference _moveInput;
+        [SerializeField] float moveSpeed = 5f;
+        [SerializeField] float mouseSensitivity = 2f;
+        [SerializeField] float jumpForce = 5f;
+        [SerializeField] float gravity = -9.81f;
 
-        public Transform playerCamera;
-        public CharacterController controller;
+        [SerializeField] Transform playerCamera;
+        [SerializeField] CharacterController controller;
 
         private float verticalRotation = 0f;
         private Vector3 playerVelocity;
@@ -34,11 +35,7 @@ namespace Meangpu.Move3D.FPS
         {
             isGrounded = controller.isGrounded;
 
-            // Handle player movement
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            float moveVertical = Input.GetAxis("Vertical");
-
-            Vector3 movement = transform.right * moveHorizontal + transform.forward * moveVertical;
+            Vector3 movement = transform.right * _moveInput.Value.x + transform.forward * _moveInput.Value.z;
             controller.Move(movement * moveSpeed * Time.deltaTime);
 
             // Handle player rotation (looking around)

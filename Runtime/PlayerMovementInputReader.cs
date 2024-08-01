@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Meangpu.Move3D.TopDown
+namespace Meangpu.Move3D
 {
-    public class PlayerMovementInput : MonoBehaviour
+    public class PlayerMovementInputReader : MonoBehaviour
     {
         [SerializeField] InputActionReference _moveInputAction;
         [SerializeField] Vector3Reference _moveOutput;
