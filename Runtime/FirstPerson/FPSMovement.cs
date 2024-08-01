@@ -16,12 +16,19 @@ namespace Meangpu.Move3D.FPS
         private Vector3 playerVelocity;
         private bool isGrounded;
 
-        private void Start()
+        public void LockCursor()
         {
-            // Lock and hide the cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+
+        public void UnlockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        private void Start() => LockCursor();
 
         private void Update()
         {
