@@ -4,9 +4,10 @@ namespace Meangpu.Move3D.FPS
 {
     public class FPSMovement : MonoBehaviour
     {
+        // learn from https://www.youtube.com/watch?v=f473C43s8nE
         [Header("Movement")]
-        [SerializeField] float _moveSpeed;
-        [SerializeField] float _groundDrag;
+        [SerializeField] float _moveSpeed = 10;
+        [SerializeField] float _groundDrag = 5;
 
         [SerializeField] float _jumpForce;
         [SerializeField] float _jumpCooldown;
