@@ -1,55 +1,51 @@
 using UnityEngine;
 
-
 namespace Meangpu.Move3D.FPS
 {
     public class FPSMovement : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] float moveSpeed;
+        [SerializeField] float _moveSpeed;
+        [SerializeField] float _groundDrag;
 
-        [SerializeField] float groundDrag;
-
-        [SerializeField] float jumpForce;
-        [SerializeField] float jumpCooldown;
-        [SerializeField] float airMultiplier;
-        bool readyToJump;
+        [SerializeField] float _jumpForce;
+        [SerializeField] float _jumpCooldown;
+        [SerializeField] float _airMultiplier;
+        bool _readyToJump;
 
         [Header("KeyBinds")]
-        [SerializeField] KeyCode jumpKey = KeyCode.Space;
+        [SerializeField] KeyCode _jumpKey = KeyCode.Space;
 
         [Header("Ground Check")]
-        [SerializeField] float playerHeight;
-        [SerializeField] LayerMask whatIsGround;
-        bool grounded;
+        [SerializeField] float _playerHeight;
+        [SerializeField] LayerMask _whatIsGround;
+        bool _grounded;
 
-        [SerializeField] Transform orientation;
+        [SerializeField] Transform _orientation;
 
-        float horizontalInput;
-        float verticalInput;
-
-        Vector3 moveDirection;
-
-        Rigidbody rb;
+        float _horizontalInput;
+        float _verticalInput;
+        Vector3 _moveDirection;
+        Rigidbody _rb;
 
         private void Start()
         {
-            rb = GetComponent<Rigidbody>();
-            rb.freezeRotation = true;
-            readyToJump = true;
+            _rb = GetComponent<Rigidbody>();
+            _rb.freezeRotation = true;
+            _readyToJump = true;
         }
 
         private void Update()
         {
-            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+            _grounded = Physics.Raycast(transform.position, Vector3.down, _playerHeight * 0.5f + 0.3f, _whatIsGround);
 
             GetInput();
             ControlSpeed();
 
-            if (grounded)
-                rb.linearDamping = groundDrag;
+            if (_grounded)
+                _rb.linearDamping = _groundDrag;
             else
-                rb.linearDamping = 0;
+                _rb.linearDamping = 0;
         }
 
         private void FixedUpdate()
@@ -59,46 +55,46 @@ namespace Meangpu.Move3D.FPS
 
         private void GetInput()
         {
-            horizontalInput = Input.GetAxisRaw("Horizontal");
-            verticalInput = Input.GetAxisRaw("Vertical");
+            _horizontalInput = Input.GetAxisRaw("Horizontal");
+            _verticalInput = Input.GetAxisRaw("Vertical");
 
-            if (Input.GetKey(jumpKey) && readyToJump && grounded)
+            if (Input.GetKey(_jumpKey) && _readyToJump && _grounded)
             {
-                readyToJump = false;
+                _readyToJump = false;
                 Jump();
-                Invoke(nameof(ResetJump), jumpCooldown);
+                Invoke(nameof(ResetJump), _jumpCooldown);
             }
         }
 
         private void MovePlayer()
         {
-            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+            _moveDirection = _orientation.forward * _verticalInput + _orientation.right * _horizontalInput;
 
-            if (grounded)
-                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            if (_grounded)
+                _rb.AddForce(_moveDirection.normalized * _moveSpeed * 10f, ForceMode.Force);
 
-            else if (!grounded)
-                rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            else if (!_grounded)
+                _rb.AddForce(_moveDirection.normalized * _moveSpeed * 10f * _airMultiplier, ForceMode.Force);
         }
 
         private void ControlSpeed()
         {
-            Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            Vector3 flatVel = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
 
             // limit velocity
-            if (flatVel.magnitude > moveSpeed)
+            if (flatVel.magnitude > _moveSpeed)
             {
-                Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+                Vector3 limitedVel = flatVel.normalized * _moveSpeed;
+                _rb.linearVelocity = new Vector3(limitedVel.x, _rb.linearVelocity.y, limitedVel.z);
             }
         }
 
         private void Jump()
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
+            _rb.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
         }
 
-        private void ResetJump() => readyToJump = true;
+        private void ResetJump() => _readyToJump = true;
     }
 }
