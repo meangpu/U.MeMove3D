@@ -16,6 +16,8 @@ namespace Meangpu.Move3D.FPS
         private float _rotationX = 0f;
         private float _rotationY = 0f;
 
+        [SerializeField] Transform _rotationData;
+
         [Header("Movement")]
         [SerializeField] float _moveSpeed = 10;
         [SerializeField] float _groundDrag = 5;
@@ -78,7 +80,7 @@ namespace Meangpu.Move3D.FPS
             _rotationX += Input.GetAxis("Mouse X") * _mouseSensitivity * Time.deltaTime;
             _rotationY += Input.GetAxis("Mouse Y") * _mouseSensitivity * Time.deltaTime;
             _rotationY = Mathf.Clamp(_rotationY, _rotationClamp.x, _rotationClamp.y);
-            transform.rotation = Quaternion.Euler(_rotationY, _rotationX, 0f);
+            _rotationData.rotation = Quaternion.Euler(_rotationY, _rotationX, 0f);
         }
 
         private void FixedUpdate()
@@ -101,7 +103,7 @@ namespace Meangpu.Move3D.FPS
 
         private void MovePlayer()
         {
-            _moveDirection = transform.forward * _verticalInput + transform.right * _horizontalInput;
+            _moveDirection = _rotationData.forward * _verticalInput + _rotationData.right * _horizontalInput;
             if (_grounded)
                 _rb.AddForce(_moveDirection.normalized * _moveSpeed * 10f, ForceMode.Force);
             else if (!_grounded)
