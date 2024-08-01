@@ -16,17 +16,21 @@ namespace Meangpu.Move3D.FPS
         private float verticalRotation = 0f;
         private Vector3 playerVelocity;
         private bool isGrounded;
+        private bool isMouseRotateCamera = true;
+
 
         public void LockCursor()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            isMouseRotateCamera = true;
         }
 
         public void UnlockCursor()
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            isMouseRotateCamera = false;
         }
 
         private void Start() => LockCursor();
@@ -38,15 +42,7 @@ namespace Meangpu.Move3D.FPS
             Vector3 movement = transform.right * _moveInput.Value.x + transform.forward * _moveInput.Value.z;
             controller.Move(movement * moveSpeed * Time.deltaTime);
 
-            // Handle player rotation (looking around)
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
-            verticalRotation -= mouseY;
-            verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
-
-            playerCamera.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
-            transform.Rotate(Vector3.up * mouseX);
+            if (isMouseRotateCamera) MouseRotateCamera();
 
             // Handle jumping and gravity
             if (isGrounded && playerVelocity.y < 0)
@@ -61,6 +57,19 @@ namespace Meangpu.Move3D.FPS
 
             playerVelocity.y += gravity * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
+        }
+
+        private void MouseRotateCamera()
+        {
+            // Handle player rotation (looking around)
+            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+            verticalRotation -= mouseY;
+            verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
+
+            playerCamera.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
+            transform.Rotate(Vector3.up * mouseX);
         }
     }
 }
